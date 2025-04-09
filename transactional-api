@@ -1,0 +1,117 @@
+## Example code to get you started testing the Transactional API
+
+# Example 1: Point + Radius transactional coverage and overlay
+
+<!-- Transactional API Demo: Point + Radius -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Transactional Demo - Point + Radius</title>
+    <style>
+      html, body { margin: 0; padding: 0; }
+      #map { width: 100vw; height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      const API_KEY = "YOUR_API_KEY_HERE";
+      const POINT = [-97.740180, 30.267610]; // [lon, lat]
+      const RADIUS = 100;
+
+      async function fetchCoverage() {
+        const url = `https://api.nearmap.com/staticmap/v3/coverage.json?point=${POINT[0]},${POINT[1]}&radius=${RADIUS}&resources=Vert.tif&dates=single`;
+        const response = await fetch(url, {
+          headers: { 'X-Nearmap-Ext-Reference': 'demo-point-radius' }
+        });
+        return response.json();
+      }
+
+      function initMapWithImage(uri) {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: POINT[1], lng: POINT[0] },
+          zoom: 20,
+          mapTypeId: "satellite"
+        });
+
+        const bounds = {
+          north: POINT[1] + 0.001,
+          south: POINT[1] - 0.001,
+          east: POINT[0] + 0.001,
+          west: POINT[0] - 0.001,
+        };
+
+        const overlay = new google.maps.GroundOverlay(uri, bounds);
+        overlay.setMap(map);
+      }
+
+      fetchCoverage().then(data => {
+        const uri = data.surveys[0].uris["Vert"][0];
+        initMapWithImage(uri);
+      });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+  </body>
+</html>
+
+# Example 2: Polygon-based transactional coverage and overlay
+
+<!-- Transactional API Demo: Polygon -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Transactional Demo - Polygon</title>
+    <style>
+      html, body { margin: 0; padding: 0; }
+      #map { width: 100vw; height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      const API_KEY = "YOUR_API_KEY_HERE";
+      const POLYGON = [
+        [-97.74025, 30.26765],
+        [-97.73995, 30.26765],
+        [-97.73995, 30.26755],
+        [-97.74025, 30.26755],
+        [-97.74025, 30.26765]
+      ];
+
+      async function fetchCoverage() {
+        const polyString = POLYGON.map(p => p.join(",")).join(",");
+        const url = `https://api.nearmap.com/staticmap/v3/coverage.json?poly=${polyString}&resources=Vert.tif&dates=single`;
+        const response = await fetch(url, {
+          headers: { 'X-Nearmap-Ext-Reference': 'demo-polygon' }
+        });
+        return response.json();
+      }
+
+      function initMapWithImage(uri, bounds) {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: (bounds.north + bounds.south) / 2, lng: (bounds.east + bounds.west) / 2 },
+          zoom: 20,
+          mapTypeId: "satellite"
+        });
+
+        const overlay = new google.maps.GroundOverlay(uri, bounds);
+        overlay.setMap(map);
+      }
+
+      fetchCoverage().then(data => {
+        const uri = data.surveys[0].uris["Vert"][0];
+        const bboxMatch = uri.match(/bbox=([\d\.-]+),([\d\.-]+),([\d\.-]+),([\d\.-]+)/);
+        const bounds = {
+          west: parseFloat(bboxMatch[1]),
+          south: parseFloat(bboxMatch[2]),
+          east: parseFloat(bboxMatch[3]),
+          north: parseFloat(bboxMatch[4])
+        };
+        initMapWithImage(uri, bounds);
+      });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+  </body>
+</html>
