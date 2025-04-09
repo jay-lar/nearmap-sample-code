@@ -15,4 +15,4 @@ Demonstration of how to connect Nearmap's tile API with the Google Maps API
 
 ## transactional-api
 Demonstration on how to connect to Nearmap's Transactional API (TXN API) and request data via a point or polygon entry
-- [`View Examples`](./google-maps/README.md)
+- [`View Examples`](./transactional-api)
