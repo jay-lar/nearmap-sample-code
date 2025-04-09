@@ -1,8 +1,8 @@
-## Example code to get you started testing the Transactional API
+# Example code to get you started testing the Transactional API
 
 --
 
-# Example 1: Point + Radius transactional coverage and overlay
+## Example 1: Point + Radius transactional coverage and overlay
 
 <!-- Transactional API Demo: Point + Radius -->
 <!DOCTYPE html>
@@ -57,7 +57,7 @@
   </body>
 </html>
 
-# Example 2: Polygon-based transactional coverage and overlay
+## Example 2: Polygon-based transactional coverage and overlay
 
 <!-- Transactional API Demo: Polygon -->
 <!DOCTYPE html>
