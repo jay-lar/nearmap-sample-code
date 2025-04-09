@@ -13,6 +13,6 @@ Contains an example of how to use OpenLayers with the Nearmap APIs
 Demonstration of how to connect Nearmap's tile API with the Google Maps API
 - [`View Examples`](./google-maps/README.md)
 
-##transactional-api
+## transactional-api
 Demonstration on how to connect to Nearmap's Transactional API (TXN API) and request data via a point or polygon entry
 - [`View Examples`](./google-maps/README.md)
